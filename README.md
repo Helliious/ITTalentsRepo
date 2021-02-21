@@ -1,2 +1,2 @@
 # ITTalentsRepo
-Exercise tasks done during IT Talents Java Academy.
+Exercise tasks done during IT Talents Java EE Academy.
