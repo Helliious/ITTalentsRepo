@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class TextReadDemo {
     public static void main(String[] args) {
@@ -15,13 +18,14 @@ public class TextReadDemo {
             Scanner sc = new Scanner(f);
             while (sc.hasNextLine()) {
                 text.append(sc.nextLine());
+                text.append("\n");
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
         try {
-            System.out.println("Commas: " + countCommas(text.toString(), 32));
+            System.out.println("Commas: " + countCommas(text.toString(), 4));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -29,7 +33,7 @@ public class TextReadDemo {
 
     static int countCommas(String text, int threadsCount) throws InterruptedException {
         Queue<String> partialTexts = new LinkedList<>();
-        ArrayList<Worker> workers = new ArrayList<>();
+        ExecutorService executorService = Executors.newFixedThreadPool(threadsCount);
         int subStrStart = 0;
         int subStrStep = text.length() / threadsCount;
         for (int i = 0; i < threadsCount; i++) {
@@ -41,21 +45,22 @@ public class TextReadDemo {
             subStrStart += subStrStep;
         }
 
-        for (int i = 0; i < threadsCount; i++) {
-            workers.add(new Worker(partialTexts.remove()));
-        }
         long startTime = System.currentTimeMillis();
-        for (Worker worker : workers) {
-            worker.start();
-            worker.join();
+        for (int i = 0; i < threadsCount; i++) {
+            executorService.submit(new Worker(partialTexts.remove()));
+        }
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
+                executorService.shutdownNow();
+            }
+        } catch (InterruptedException ex) {
+            executorService.shutdownNow();
+            Thread.currentThread().interrupt();
         }
         long endTime = System.currentTimeMillis();
         System.out.println("Code executed in: " + (endTime - startTime) + " milliseconds");
 
-        int result = 0;
-        for (Worker worker : workers) {
-            result += worker.getCommasCount();
-        }
-        return result;
+        return Worker.commasCount.get();
     }
 }
