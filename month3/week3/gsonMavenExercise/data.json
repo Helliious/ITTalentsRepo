@@ -1,0 +1,18 @@
+{
+  "data" : [
+    {
+      "drinks" : {
+        "type" : "alcohol",
+        "quantity" : 3
+      },
+      "person" : "Silvia",
+      "type" : "rakia",
+      "place" : "ForcePoint"
+    },
+    {
+      "drinks" : 8,
+      "person" : "Elica",
+      "type" : "vodka"
+    }
+  ]
+}
