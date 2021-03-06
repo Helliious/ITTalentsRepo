@@ -5,7 +5,7 @@ import util.Randomizator;
 
 import java.util.Objects;
 
-public abstract class Person {
+public abstract class Person extends Thread {
     private static final int[] uniqueDigits = {0,0,0,0,0,0,0};
     private final String name;
     private final String mobileNumber;
@@ -47,9 +47,12 @@ public abstract class Person {
         }
     }
 
-    public void showEmployee() {
-        System.out.println("Name: " + name);
-        System.out.println("Mobile number: " + mobileNumber);
+    public String getPersonName() {
+        return name;
+    }
+
+    public Gender getGender() {
+        return gender;
     }
 
     @Override
