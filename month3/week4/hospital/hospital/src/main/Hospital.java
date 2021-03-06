@@ -40,6 +40,7 @@ public class Hospital {
             }
         }
         Doctor doctor = doctors.remove();
+        patient.setHealingPeriod();
         int roomId = 0;
         for (int i = 1; i < 10; i++) {
             if (patients.get(doctor.getSpecialization()).get(i).size() < 3 && !patients.get(doctor.getSpecialization()).get(i).containsKey(patient)) {
@@ -50,13 +51,19 @@ public class Hospital {
                 break;
             }
         }
-        while (!patient.getReadyForCheckOut()) {
+        while (!patient.isReadyForCheckOut()) {
+            if (patient.isGivenMeds() && patient.isVisited()) {
+                patient.passADay();
+                patient.setVisited(false);
+                patient.setGivenMeds(false);
+            }
             try {
                 wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        System.out.println("Patient " + patient.getPersonName() + " with diagnose " + doctor.getSpecialization() + " check out!");
         doctors.add(doctor);
         patients.get(doctor.getSpecialization()).get(roomId).remove(patient);
         if (!patients.get(doctor.getSpecialization()).get(roomId).isEmpty()) {
@@ -65,35 +72,68 @@ public class Hospital {
     }
 
     public synchronized void giveMedicine(Nurse nurse) {
+        while (!hasWaitingMedsPatients(nurse.getSpecialization())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         HashMap<Integer, HashMap<Patient, Doctor>> department = patients.get(nurse.getSpecialization());
         for (Map.Entry<Integer, HashMap<Patient, Doctor>> room : department.entrySet()) {
             for (Map.Entry<Patient, Doctor> patient : room.getValue().entrySet()) {
-                System.out.println("Nurse " + nurse.getPersonName() + " gave patient " + patient.getKey().getPersonName() +
-                                    " in room " + room.getKey() + " from department " + nurse.getSpecialization() + " medicine!");
+                if (!patient.getKey().isGivenMeds()) {
+                    System.out.println("Nurse " + nurse.getPersonName() + " gave patient " + patient.getKey().getPersonName() +
+                            " in room " + room.getKey() + " from department " + nurse.getSpecialization() + " medicine!");
+                    patient.getKey().setGivenMeds(true);
+                }
             }
         }
+        notifyAll();
+    }
+
+    private boolean hasWaitingMedsPatients(Specialization specialization) {
+        HashMap<Integer, HashMap<Patient, Doctor>> department = patients.get(specialization);
+        for (Map.Entry<Integer, HashMap<Patient, Doctor>> rooms : department.entrySet()) {
+            for (Map.Entry<Patient, Doctor> patient : rooms.getValue().entrySet()) {
+                if (!patient.getKey().isGivenMeds()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public synchronized void giveVisitation(Doctor doctor) {
+        while (!hasWaitingVisitationPatients(doctor.getSpecialization())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         HashMap<Integer, HashMap<Patient, Doctor>> department = patients.get(doctor.getSpecialization());
         for (Map.Entry<Integer, HashMap<Patient, Doctor>> room : department.entrySet()) {
             for (Map.Entry<Patient, Doctor> patient : room.getValue().entrySet()) {
                 if (patient.getValue() == doctor) {
                     System.out.println("Doctor " + doctor.getPersonName() + " gave visitation to patient " + patient.getKey().getPersonName() +
                             " in room " + room.getKey() + " from department " + doctor.getSpecialization());
+                    patient.getKey().setVisited(true);
                 }
             }
         }
+        notifyAll();
     }
 
-    public void showPatients() {
-        for (Map.Entry<Specialization, HashMap<Integer, HashMap<Patient, Doctor>>> departments : patients.entrySet()) {
-            for (Map.Entry<Integer, HashMap<Patient, Doctor>> rooms : departments.getValue().entrySet()) {
-                for (Map.Entry<Patient, Doctor> patient : rooms.getValue().entrySet()) {
-                    System.out.println("Patient: " + patient.getKey().getPersonName());
-                    System.out.println("Doctor: " + patient.getValue().getPersonName());
+    public boolean hasWaitingVisitationPatients(Specialization specialization) {
+        HashMap<Integer, HashMap<Patient, Doctor>> department = patients.get(specialization);
+        for (Map.Entry<Integer, HashMap<Patient, Doctor>> rooms : department.entrySet()) {
+            for (Map.Entry<Patient, Doctor> patient : rooms.getValue().entrySet()) {
+                if (!patient.getKey().isVisited()) {
+                    return true;
                 }
             }
         }
+        return false;
     }
 }

@@ -24,7 +24,7 @@ public class Nurse extends Person implements IWorker {
         while (true) {
             hospital.giveMedicine(this);
             try {
-                Thread.sleep(3000);
+                Thread.sleep(4000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
