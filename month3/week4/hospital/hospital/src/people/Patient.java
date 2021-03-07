@@ -45,6 +45,10 @@ public class Patient extends Person {
         return healingPeriod == 0;
     }
 
+    public int getHealingPeriod() {
+        return healingPeriod;
+    }
+
     @Override
     public void run() {
         hospital.addPatient(this);

@@ -44,5 +44,18 @@ public class HospitalDemo {
         doctor4.start();
         doctor5.start();
 
+        Thread data = new Thread(() -> {
+            while (true) {
+                hospital.showAvailability();
+                hospital.nextDayCheckOut();
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        data.setDaemon(true);
+        data.start();
     }
 }

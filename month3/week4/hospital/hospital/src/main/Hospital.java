@@ -1,5 +1,6 @@
 package main;
 
+import constants.Constants;
 import people.Doctor;
 import people.Nurse;
 import people.Patient;
@@ -135,5 +136,30 @@ public class Hospital {
             }
         }
         return false;
+    }
+
+    public void showAvailability() {
+        for (Map.Entry<Specialization, HashMap<Integer, HashMap<Patient, Doctor>>> departments : patients.entrySet()) {
+            System.out.println("=============" + departments.getKey() + "=============");
+            for (Map.Entry<Integer, HashMap<Patient, Doctor>> rooms : departments.getValue().entrySet()) {
+                System.out.println("Room - " + rooms.getKey() + ": " + (Constants.ROOM_BEDS_COUNT - rooms.getValue().size()));
+            }
+        }
+        System.out.println("-----------------------------------");
+    }
+
+    public void nextDayCheckOut() {
+        System.out.println("Patients to check out tomorrow:");
+        System.out.println("-----------------------------------");
+        for (Map.Entry<Specialization, HashMap<Integer, HashMap<Patient, Doctor>>> departments : patients.entrySet()) {
+            for (Map.Entry<Integer, HashMap<Patient, Doctor>> rooms : departments.getValue().entrySet()) {
+                for (Map.Entry<Patient, Doctor> patient : rooms.getValue().entrySet()) {
+                    if (patient.getKey().getHealingPeriod() == 1) {
+                        System.out.println(patient.getKey().getPersonName());
+                    }
+                }
+            }
+        }
+        System.out.println("-----------------------------------");
     }
 }
