@@ -1,5 +1,6 @@
 package main.readingMaters;
 
+import main.Library;
 import main.constants.Constants;
 import main.util.Randomizator;
 
@@ -7,21 +8,20 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAmount;
 
-public class Book extends ReadingMater implements IRentable {
+public class Book extends ReadingMater {
     private final String author;
     private final LocalDate publishingDate;
     private final BookGenre bookGenre;
 
-    public Book() {
+    public Book(Library library) {
         super(
-                Constants.BOOK_NAMES[Randomizator.getRandNum(
-                        0,
-                        Constants.BOOK_NAMES.length
-                )],
+                Constants.BOOK_NAMES[1],
                 Constants.PUBLISHING_HOUSES[Randomizator.getRandNum(
                         0,
                         Constants.PUBLISHING_HOUSES.length
-                )]
+                )],
+                ReadingMaterType.BOOK,
+                library
         );
         this.author = Constants.AUTHORS[Randomizator.getRandNum(
                 0,
@@ -44,7 +44,12 @@ public class Book extends ReadingMater implements IRentable {
     }
 
     @Override
-    public TemporalAmount getRentDuration() {
-        return Duration.ofSeconds(10);
+    public Duration getRentDuration() {
+        return Duration.ofSeconds(3);
+    }
+
+    @Override
+    public double getPrice() {
+        return 2.0;
     }
 }

@@ -1,16 +1,19 @@
 package main.readingMaters;
 
+import main.Library;
 import main.constants.Constants;
 import main.util.Randomizator;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAmount;
 
 public class Magazine extends ReadingMater {
     private final MagazineCategory magazineCategory;
     private final int number;
     private final LocalDate publishingDate;
 
-    public Magazine() {
+    public Magazine(Library library) {
         super(
                 Constants.MAGAZINE_NAMES[Randomizator.getRandNum(
                         0,
@@ -19,7 +22,9 @@ public class Magazine extends ReadingMater {
                 Constants.PUBLISHING_HOUSES[Randomizator.getRandNum(
                         0,
                         Constants.PUBLISHING_HOUSES.length
-                )]
+                )],
+                ReadingMaterType.MAGAZINE,
+                library
         );
         this.magazineCategory = MagazineCategory.values()[Randomizator.getRandNum(
                 0,
@@ -32,5 +37,15 @@ public class Magazine extends ReadingMater {
     @Override
     public String getKind() {
         return magazineCategory.toString();
+    }
+
+    @Override
+    public Duration getRentDuration() {
+        return null;
+    }
+
+    @Override
+    public double getPrice() {
+        return 0;
     }
 }
