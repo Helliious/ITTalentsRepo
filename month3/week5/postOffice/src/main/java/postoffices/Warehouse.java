@@ -51,14 +51,6 @@ public class Warehouse {
         return delivery;
     }
 
-    public synchronized void showStock() {
-        for (Map.Entry<DeliveryType, List<Delivery>> d : deliveries.entrySet()) {
-            for (Delivery delivery : d.getValue()) {
-                delivery.showDelivery();
-            }
-        }
-    }
-
     public int getDeliveriesCount() {
         int deliveriesCount = 0;
         for (Map.Entry<DeliveryType, List<Delivery>> d : deliveries.entrySet()) {

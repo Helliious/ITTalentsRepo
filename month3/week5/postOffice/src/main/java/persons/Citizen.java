@@ -23,6 +23,10 @@ public class Citizen extends Person {
         this.postOffice = postOffice;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
     @Override
     public void run() {
         while (true) {

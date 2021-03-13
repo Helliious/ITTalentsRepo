@@ -42,7 +42,7 @@ public class PostOfficeDemo {
 
         Thread data = new Thread(() -> {
             while (true) {
-                postOffice.showStock();
+                postOffice.showArchive();
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {

@@ -11,14 +11,22 @@ public abstract class Delivery {
         this.receiver = receiver;
     }
 
+    public Citizen getSender() {
+        return sender;
+    }
+
+    public Citizen getReceiver() {
+        return receiver;
+    }
+
     abstract double getTax();
     public abstract DeliveryType getType();
     public abstract int getDeliveryTime();
 
     public void showDelivery() {
-        System.out.println("Delivery type: " + getType());
-        System.out.println("From: " + sender.getFirstName() + " " + sender.getLastName());
-        System.out.println("To: " + receiver.getFirstName() + " " + receiver.getLastName());
-        System.out.println("Price: " + getTax() + "$");
+        System.out.println("\t\tDelivery type: " + getType());
+        System.out.println("\t\tFrom: " + sender.getFirstName() + " " + sender.getLastName());
+        System.out.println("\t\tTo: " + receiver.getFirstName() + " " + receiver.getLastName());
+        System.out.println("\t\tPrice: " + getTax() + "$");
     }
 }
