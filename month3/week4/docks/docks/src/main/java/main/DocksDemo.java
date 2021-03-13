@@ -1,5 +1,7 @@
 package main;
 
+import loggers.Logger;
+
 public class DocksDemo {
     public static void main(String[] args) {
         Harbour harbour = new Harbour();
@@ -33,5 +35,9 @@ public class DocksDemo {
         Distributor distributor2 = new Distributor(harbour, "Distributor-2");
         distributor1.start();
         distributor2.start();
+
+        Logger logger = new Logger();
+        logger.setDaemon(true);
+        logger.start();
     }
 }

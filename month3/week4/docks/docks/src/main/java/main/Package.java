@@ -7,4 +7,8 @@ public class Package {
     Package() {
         packageId = id++;
     }
+
+    public int getPackageId() {
+        return packageId;
+    }
 }
