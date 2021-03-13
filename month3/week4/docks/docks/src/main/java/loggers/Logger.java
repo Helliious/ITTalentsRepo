@@ -2,14 +2,19 @@ package loggers;
 
 import DBConnector.DBConnector;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class Logger extends Thread {
+    private static int statsCounter = 1;
+
     @Override
     public void run() {
         while (true) {
@@ -53,6 +58,7 @@ public class Logger extends Thread {
         for (Map.Entry<Integer, Integer> stats : unloadedShips.entrySet()) {
             System.out.println("Crane " + stats.getKey() + " : " + stats.getValue() + " packages");
         }
+        saveToFile(unloadedShips, "Crane", "packages");
     }
 
     private void listAllShipsPerDock() {
@@ -70,6 +76,18 @@ public class Logger extends Thread {
 
         for (Map.Entry<Integer, Integer> stats : unloadedShips.entrySet()) {
             System.out.println("Dock " + stats.getKey() + " : " + stats.getValue() + " ships");
+        }
+        saveToFile(unloadedShips, "Dock", "ships");
+    }
+
+    private void saveToFile(TreeMap<Integer, Integer> stats, String keyName, String valueName) {
+        try (PrintWriter pr = new PrintWriter("report-" + (statsCounter++) + "-" +
+                        LocalDateTime.now().toString().replace(":","-").replace("\\.","-") + ".txt")) {
+            for (Map.Entry<Integer, Integer> e : stats.entrySet()) {
+                pr.println(keyName + " " + e.getKey() + " : " + e.getValue() + " " + valueName);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }
