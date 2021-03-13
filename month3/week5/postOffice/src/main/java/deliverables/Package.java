@@ -1,4 +1,39 @@
 package deliverables;
 
-public class Package {
+import persons.Citizen;
+
+public class Package extends Delivery {
+    private final int length;
+    private final int width;
+    private final int height;
+    private final boolean isFragile;
+
+    Package(Citizen sender,
+            Citizen receiver,
+            int length,
+            int width,
+            int height,
+            boolean isFragile) {
+        super(sender, receiver);
+        this.length = length;
+        this.height = height;
+        this.width = width;
+        this.isFragile = isFragile;
+    }
+
+    @Override
+    double getTax() {
+        int tax = 2;
+        if (isAbnormal()) {
+            tax += ((tax * 50) / 100);
+        }
+        if (isFragile) {
+            tax += ((tax * 50) / 100);
+        }
+        return tax;
+    }
+
+    private boolean isAbnormal() {
+        return width > 60 || height > 60 || length > 60;
+    }
 }
