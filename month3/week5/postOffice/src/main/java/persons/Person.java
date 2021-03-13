@@ -17,4 +17,12 @@ public abstract class Person extends Thread {
                 Constants.LAST_NAMES.length
         )];
     }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
 }

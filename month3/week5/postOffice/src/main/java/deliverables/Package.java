@@ -8,12 +8,12 @@ public class Package extends Delivery {
     private final int height;
     private final boolean isFragile;
 
-    Package(Citizen sender,
-            Citizen receiver,
-            int length,
-            int width,
-            int height,
-            boolean isFragile) {
+    public Package(Citizen sender,
+                   Citizen receiver,
+                   int length,
+                   int width,
+                   int height,
+                   boolean isFragile) {
         super(sender, receiver);
         this.length = length;
         this.height = height;
@@ -31,6 +31,16 @@ public class Package extends Delivery {
             tax += ((tax * 50) / 100);
         }
         return tax;
+    }
+
+    @Override
+    public DeliveryType getType() {
+        return DeliveryType.PACKAGE;
+    }
+
+    @Override
+    public int getDeliveryTime() {
+        return 2000;
     }
 
     private boolean isAbnormal() {
